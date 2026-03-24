@@ -1,0 +1,146 @@
+{
+  "name": "js-object-expander",
+  "displayName": "JS Object Expander",
+  "description": "Intelligently expand and collapse JavaScript/TypeScript object literals based on editor context — optimised for MongoDB documents.",
+  "version": "0.1.0",
+  "publisher": "js-objex",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "categories": [
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact",
+    "onLanguage:json",
+    "onLanguage:jsonc"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "js-object-expander.smartExpand",
+        "title": "Object Expander: Smart Expand"
+      },
+      {
+        "command": "js-object-expander.smartCollapse",
+        "title": "Object Expander: Smart Collapse"
+      },
+      {
+        "command": "js-object-expander.toggle",
+        "title": "Object Expander: Toggle"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "js-object-expander.smartExpand",
+        "key": "ctrl+shift+e",
+        "mac": "cmd+shift+e",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "js-object-expander.smartCollapse",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "js-object-expander.toggle",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "js-object-expander.smartExpand",
+          "group": "1_modification@10",
+          "when": "editorLangId =~ /javascript|typescript|javascriptreact|typescriptreact|json|jsonc/"
+        },
+        {
+          "command": "js-object-expander.smartCollapse",
+          "group": "1_modification@11",
+          "when": "editorLangId =~ /javascript|typescript|javascriptreact|typescriptreact|json|jsonc/"
+        },
+        {
+          "command": "js-object-expander.toggle",
+          "group": "1_modification@12",
+          "when": "editorLangId =~ /javascript|typescript|javascriptreact|typescriptreact|json|jsonc/"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "JS Object Expander",
+      "properties": {
+        "jsObjectExpander.complexityThreshold": {
+          "type": "number",
+          "default": 40,
+          "description": "Complexity score above which a nested object/array is expanded onto multiple lines. Lower values expand more aggressively."
+        },
+        "jsObjectExpander.trailingCommas": {
+          "type": "string",
+          "default": "always",
+          "enum": [
+            "always",
+            "never",
+            "preserve"
+          ],
+          "enumDescriptions": [
+            "Always add a trailing comma after the last entry.",
+            "Never add a trailing comma.",
+            "Keep the trailing comma as-is from the original code."
+          ],
+          "description": "How to handle trailing commas when expanding objects."
+        },
+        "jsObjectExpander.maxExpandDepth": {
+          "type": "number",
+          "default": 10,
+          "description": "Maximum nesting depth for recursive expansion."
+        },
+        "jsObjectExpander.collapseOnSingleProperty": {
+          "type": "boolean",
+          "default": true,
+          "description": "Keep nested objects/arrays with a single entry on one line when expanding."
+        },
+        "jsObjectExpander.formatOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically expand complex object literals when saving a file. Enable via settings.json: \"jsObjectExpander.formatOnSave\": true"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.110.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.27.3",
+    "eslint": "^9.39.3",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
+  },
+  "dependencies": {
+    "vsce": "^2.15.0"
+  }
+}
